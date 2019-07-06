@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace BoutLabs
@@ -10,6 +11,9 @@ namespace BoutLabs
 
         [Tooltip("Response to invoke when the Event is raised.")]
         public UnityEvent Response;
+
+        [Tooltip("Delay before invoking the Event.")]
+        public float Delay = 0f;
 
         private void OnEnable()
         {
@@ -23,7 +27,15 @@ namespace BoutLabs
 
         public void OnEventRaised()
         {
-            Response.Invoke();
+            StartCoroutine(_InvokeResponse());
         }
+
+        private IEnumerator _InvokeResponse()
+        {
+            yield return new WaitForSeconds(Delay);
+
+            Response.Invoke();
+            yield return null;
+        } 
     }
 }
